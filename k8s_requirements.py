@@ -3,7 +3,7 @@ import asyncio
 from model import DeploymentRequirement
 
 # big bad and ugly
-class ParsingMachine:
+class __ParsingMachine:
 
     def __init__(self, filename):
         self.__content = None
@@ -83,15 +83,27 @@ class ParsingMachine:
         if val.endswith("m"):
             return int(val[:-1]) * 10**-3
 
-        return int(val)
+        result = int(val)
+
+        if result == 0:
+            raise ValueError("Cpu requirement is 0")
+
+        return result
 
     def __convert_memory(self, val:str):
-        if val.endswith("Mi"):
-            return int(val[:-2])
-        elif val.endswith("Gi"):
-            return 1024 * int(val[:-2])
+        result = 0
 
-        raise ValueError(f"filename: {self.__filename}, ram: {val}")
+        if val.endswith("Mi"):
+            result =  int(val[:-2])
+        elif val.endswith("Gi"):
+            result = 1024 * int(val[:-2])
+        else:
+            raise ValueError(f"Unable to parse ram value '{val}'")
+
+        if result == 0:
+            raise  ValueError(f"Ram requirement is 0")
+
+        return result
 
     def run(self):
 
@@ -102,18 +114,17 @@ class ParsingMachine:
 
         total_memory = 0
         total_cpu = 0
-        for (name, cpu, memory) in self.__containers:
-            try:
+        try:
+            for (name, cpu, memory) in self.__containers:
                 total_cpu += self.__convert_cpu(cpu)
                 total_memory += self.__convert_memory(memory)
-            except Exception as e:
-                print(e)
 
-        for i in range(0, self.__total_amount):
-            yield (total_cpu, total_memory)
+            for i in range(0, self.__total_amount):
+                yield DeploymentRequirement(total_memory, total_cpu)
+        except Exception as e:
+            print(f"{self.__filename}: {e}")
 
-# TODO: probably there is some python api for k8s?
-def get_all_deployments():
+def __load_all_deployments_list():
 
     deployments_filename = "deployments.txt"
 
@@ -130,7 +141,7 @@ def get_all_deployments():
             yield (namespace_name, deployment_name)
 
 
-async def describe_deployment(namespace, deployment_name):
+async def __load_deployment_info(namespace, deployment_name):
     filename = f"{namespace}__{deployment_name}"
 
     if not os.path.exists(f".cache/descriptions/{filename}"):
@@ -140,7 +151,7 @@ async def describe_deployment(namespace, deployment_name):
 
 
 
-def parse_deployment(filename):
+def __parse_deployment(filename):
     with open(f".cache/{filename}", "r") as deployment_file:
         content = deployment_file.readlines()
 
@@ -150,27 +161,24 @@ def parse_deployment(filename):
 
         raise "Unable to find information about replicas amount"
 
-def parse_descriptions():
-
+def __parse_all_descriptions():
     for filename in os.listdir(".cache/descriptions"):
-        result = list(ParsingMachine(f".cache/descriptions/{filename}").run())
-        for (cpu, ram) in result:
-            yield DeploymentRequirement(ram, cpu)
+        for requirement in __ParsingMachine(f".cache/descriptions/{filename}").run():
+            yield requirement
 
 
 async def load_info():
 
     tasks = []
-    for (namespace, deployment) in get_all_deployments():
-        tasks.append(asyncio.create_task(describe_deployment(namespace, deployment)))
+    for (namespace, deployment) in __load_all_deployments_list():
+        tasks.append(asyncio.create_task(__load_deployment_info(namespace, deployment)))
 
         if len(tasks) >= 10:
             await asyncio.gather(*tasks)
             tasks.clear()
 
     print("All descriptions were downloaded")
-    return list(parse_descriptions())
+    return list(__parse_all_descriptions())
 
 
-result = asyncio.run(load_info())
-print(result)
+

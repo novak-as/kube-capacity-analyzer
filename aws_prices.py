@@ -2,7 +2,7 @@ import boto3
 import json
 from model import AwsInstanceType
 
-def get_prices(region):
+def __get_prices(region):
 
     pricelist = boto3.client("pricing", region_name=region).get_products(
         ServiceCode='AmazonEC2',
@@ -48,7 +48,7 @@ def describe_available_ec2_instances(region):
 
     }
 
-    prices = get_prices(region)
+    prices = __get_prices(region)
 
     while True:
         describe_result = ec2.describe_instance_types(**describe_args)
