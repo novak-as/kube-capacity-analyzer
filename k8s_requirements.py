@@ -81,9 +81,9 @@ class __ParsingMachine:
 
     def __convert_cpu(self, val:str):
         if val.endswith("m"):
-            return int(val[:-1]) * 10**-3
-
-        result = int(val)
+            result = int(val[:-1]) * 10**-3
+        else:
+            result = int(val)
 
         if result == 0:
             raise ValueError("Cpu requirement is 0")
@@ -91,8 +91,6 @@ class __ParsingMachine:
         return result
 
     def __convert_memory(self, val:str):
-        result = 0
-
         if val.endswith("Mi"):
             result =  int(val[:-2])
         elif val.endswith("Gi"):
@@ -101,7 +99,7 @@ class __ParsingMachine:
             raise ValueError(f"Unable to parse ram value '{val}'")
 
         if result == 0:
-            raise  ValueError(f"Ram requirement is 0")
+            raise ValueError(f"Ram requirement is 0")
 
         return result
 
@@ -115,12 +113,17 @@ class __ParsingMachine:
         total_memory = 0
         total_cpu = 0
         try:
+
+            if len(self.__containers) == 0:
+                raise Exception("No containers loaded")
+
             for (name, cpu, memory) in self.__containers:
                 total_cpu += self.__convert_cpu(cpu)
                 total_memory += self.__convert_memory(memory)
 
             for i in range(0, self.__total_amount):
                 yield DeploymentRequirement(total_memory, total_cpu)
+
         except Exception as e:
             print(f"{self.__filename}: {e}")
 
