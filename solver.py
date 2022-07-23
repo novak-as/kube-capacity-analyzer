@@ -62,6 +62,10 @@ class MipModel:
                 model += instances_in_use[type][instance] >= xsum(placement_matrix[type][instance]) / len(self.requirements)
                 model += instances_in_use[type][instance] <= (len(self.requirements) - 1 + xsum(placement_matrix[type][instance]))/len(self.requirements)
 
+                if instance > 0:
+                    # don't try to use N instance if N-1 is still not in use
+                    model += instances_in_use[type][instance-1] >= instances_in_use[type][instance]
+
                 for pod in rlen(self.requirements):
                     # fit by ram
                     model += self.available_instances[type].ram >= placement_matrix[type][instance][pod] * self.requirements[pod].ram
