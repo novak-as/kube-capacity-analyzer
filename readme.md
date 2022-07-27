@@ -9,27 +9,27 @@ This is quick and dirty **MVP** which
 Minimize:
 
 $$
-\sum_{i=0}^{I} \left( Price_i * InUse_i \right)
+\sum_{t=0}^{T} \sum_{i=0}^{I_t} \left( Price_t * InUse_i^t \right)
 $$
 
 
 Subject to:
 
-$$\sum_{p=0}^{P} \left( RequirementRam_p * M_p^i \right) \le AvailableRam_i, \forall i \in \set{0 \dotsc I}$$
+$$\sum_{p=0}^{P} \left( RequirementRam_p * M_p^i \right) \le AvailableRam_i^t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$\sum_{p=0}^{P} \left( RequirementCpu_p * M_p^i \right) \le AvailableCpu_i, \forall i \in \set{0 \dotsc I}$$
+$$\sum_{p=0}^{P} \left( RequirementCpu_p * M_p^i \right) \le AvailableCpu_i^t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$\sum_{i=0}^{I} M_p^i = 1, \forall p \in \set{0 \dotsc P}$$
+$$\sum_{i=0}^{I_t} M_p^i = 1, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
 
-$$InUse_i \ge { \sum_\nolimits{p=0}^P M_p^i  \over P }, \forall i \in \set{0 \dotsc I}$$
+$$InUse_i^t \ge { \sum_\nolimits{p=0}^P M_p^i  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$InUse_i \le P-1 + { \sum\nolimits_{p=0}^P M_p^i  \over P }, \forall i \in \set{0 \dotsc I}$$
+$$InUse_i^t \le P-1 + { \sum\nolimits_{p=0}^P M_p^i  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$InUse_{i-1} \ge InUse_i, \forall i \in \set{1 \dotsc I}$$
+$$InUse_{i-1}^t \ge InUse_i^t, \forall i \in \set{1 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$M_p^i \in \{0 \dotsc 1\}, \forall i \in \{0 \dotsc I\}, \forall p \in \set{0 \dotsc P}$$
+$$M_p^i \in \{0 \dotsc 1\}, \forall i \in \{0 \dotsc I_t\}, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
 
-$$InUse_i  \in \{0 \dotsc 1\}, \forall i \in \set{0 \dotsc I}$$
+$$InUse_i^t  \in \{0 \dotsc 1\}, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
 # Result
 ```
