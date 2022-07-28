@@ -1,4 +1,4 @@
-This is quick and dirty **MVP** which
+ This is quick and dirty **MVP** which
 
 - loads available EC2 instances
 - loads description of all pods in k8s cluster 
@@ -15,19 +15,19 @@ $$
 
 Subject to:
 
-$$\sum_{p=0}^{P} \left( RequirementRam_p * M_p^i \right) \le AvailableRam_i^t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+$$\sum_{p=0}^{P} \left( RequirementRam_p * M_p^{i_t} \right) \le AvailableRam_t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$\sum_{p=0}^{P} \left( RequirementCpu_p * M_p^i \right) \le AvailableCpu_i^t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+$$\sum_{p=0}^{P} \left( RequirementCpu_p * M_p^{i_t} \right) \le AvailableCpu_t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$\sum_{i=0}^{I_t} M_p^i = 1, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
+$$\sum_{i=0}^{I_t} M_p^{i_t} = 1, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
 
-$$InUse_i^t \ge { \sum_\nolimits{p=0}^P M_p^i  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+$$InUse_i^t \ge { \sum_\nolimits{p=0}^P M_p^{i_t}  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$InUse_i^t \le P-1 + { \sum\nolimits_{p=0}^P M_p^i  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+$$InUse_i^t \le P-1 + { \sum\nolimits_{p=0}^P M_p^{i_t}  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
 $$InUse_{i-1}^t \ge InUse_i^t, \forall i \in \set{1 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$M_p^i \in \{0 \dotsc 1\}, \forall i \in \{0 \dotsc I_t\}, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
+$$M_p^{i_t} \in \{0 \dotsc 1\}, \forall i \in \{0 \dotsc I_t\}, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
 
 $$InUse_i^t  \in \{0 \dotsc 1\}, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
