@@ -6,6 +6,15 @@
 
 # Model
 
+Given set of $T$ available hosts with known $AvailableRam_t$, and $AvailableCpu_t$, and set of $P$ pods with known
+$RequirementRam_p$ and $RequirementCpu_p$ in worst-case scenario (1 pod goes to separate instance) we will have to use
+$I_t = P, \forall t \in \set {0 \dotsc T}$ instances.
+Saying that if instance number $i$ of type $t$ is in use described by $InUse_i^t$ then our total price will be
+$\sum\nolimits_{t=0}^{T} \sum\nolimits_{i=0}^{I_t} \left( Price_t * InUse_i^t \right)$
+
+we also should consider following limitation:
+**TODO**
+
 Minimize:
 
 $$
@@ -27,9 +36,9 @@ $$InUse_i^t \le P-1 + { \sum\nolimits_{p=0}^P M_p^{i_t}  \over P }, \forall i \i
 
 $$InUse_{i-1}^t \ge InUse_i^t, \forall i \in \set{1 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
-$$M_p^{i_t} \in \{0 \dotsc 1\}, \forall i \in \{0 \dotsc I_t\}, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
+$$M_p^{i_t} \in \set \{0 \dotsc 1\}, \forall i \in \set {0 \dotsc I_t\}, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
 
-$$InUse_i^t  \in \{0 \dotsc 1\}, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+$$InUse_i^t  \in \set \{0 \dotsc 1\}, \forall i \in \set {0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
 # Result
 ```
