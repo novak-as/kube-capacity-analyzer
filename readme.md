@@ -14,7 +14,7 @@ $$\sum_{t=0}^{T} \sum_{i=0}^{I_t} \left( Price_t * InUse_i^t \right)$$
 
 We also should consider such limitations as:
 
-- we can overexceed instance capacity by ram or cpu, in other words:
+- we can not overexceed instance capacity by ram or cpu, in other words:
 $$\sum_{p=0}^{P} \left( RequirementRam_p * M_p^{i_t} \right) \le AvailableRam_t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
 
 $$\sum_{p=0}^{P} \left( RequirementCpu_p * M_p^{i_t} \right) \le AvailableCpu_t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
