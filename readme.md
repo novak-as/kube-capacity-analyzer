@@ -10,10 +10,32 @@ Given set of $T$ available hosts with known $AvailableRam_t$, and $AvailableCpu_
 $RequirementRam_p$ and $RequirementCpu_p$ in worst-case scenario (1 pod goes to separate instance) we will have to use
 $I_t = P, \forall t \in \set {0 \dotsc T}$ instances.
 Saying that if instance number $i$ of type $t$ is in use described by $InUse_i^t$ then our total price will be
-$\sum\nolimits_{t=0}^{T} \sum\nolimits_{i=0}^{I_t} \left( Price_t * InUse_i^t \right)$
+$$\sum_{t=0}^{T} \sum_{i=0}^{I_t} \left( Price_t * InUse_i^t \right)$$
 
-we also should consider following limitation:
-**TODO**
+We also should consider such limitations as:
+
+- we can overexceed instance capacity by ram or cpu, in other words:
+$$\sum_{p=0}^{P} \left( RequirementRam_p * M_p^{i_t} \right) \le AvailableRam_t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+
+$$\sum_{p=0}^{P} \left( RequirementCpu_p * M_p^{i_t} \right) \le AvailableCpu_t, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+
+- every pod should be placed, and every pod should be placed exactly 1 time:
+$$\sum_{i=0}^{I_t} M_p^{i_t} = 1, \forall p \in \set{0 \dotsc P}, \forall t \in \set {0 \dotsc T}$$
+
+We should also specify that instance $i$ of type $t$ is in use only if at least one pod is placed there,
+i.e $InUse_i^t = 1$ if $\sum\nolimits_{p=0}^P M_p^{i_t} > 0$ else $0$.
+Since this is not a valid description in terms of linear programming this can be replaced with the set of equations
+$$InUse_i^t \ge { \sum_\nolimits{p=0}^P M_p^{i_t}  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+
+$$InUse_i^t \le P-1 + { \sum\nolimits_{p=0}^P M_p^{i_t}  \over P }, \forall i \in \set{0 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+
+Not mandatory for calculation correctness, but is a good relaxation to reduce search area to limit that instances 
+should be used sequentially (i.e there is no sense to calculate placement for instance $5$ if instance $4$ is still not in use). 
+To achieve this we can specify another constraint:
+$$InUse_{i-1}^t \ge InUse_i^t, \forall i \in \set{1 \dotsc I_t}, \forall t \in \set {0 \dotsc T}$$
+
+
+To summarize, our formulation be
 
 Minimize:
 
